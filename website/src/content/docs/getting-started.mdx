@@ -1,53 +1,2621 @@
----
-title: Getting Started
-description: How to set up HTMLHint in your project by adding it as a dev dependency and configuring it.
----
+ <!DOCTYPE html> 
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+<html lang="it">
 
-1\. Use npm or yarn to install HTMLHint:
+<head>
 
-<Tabs>
-  <TabItem label="npm">
-`npm install --save-dev htmlhint`
-  </TabItem>
-  <TabItem label="yarn">
-`yarn add --dev htmlhint`
-  </TabItem>
-</Tabs>
+<meta charset="UTF-8">
 
-2\. Create a `.htmlhintrc` configuration file in the root of your project with `htmlhint --init`. This will create a file with default rules. You can customize it as needed. For example, you can use the following configuration to enforce some common best practices:
+<title>Storia Docenti Matematica e Fisica</title>
 
-```json
-{
-  "alt-require": true,
-  "attr-lowercase": true,
-  "attr-no-duplication": true,
-  "attr-value-double-quotes": true,
-  "attr-value-no-duplication": true,
-  "button-type-require": true,
-  "doctype-first": true,
-  "doctype-html5": true,
-  "frame-title-require": true,
-  "h1-require": true,
-  "html-lang-require": true,
-  "id-unique": true,
-  "input-requires-label": true,
-  "main-require": true,
-  "meta-charset-require": true,
-  "meta-description-require": true,
-  "meta-viewport-require": true,
-  "spec-char-escape": true,
-  "src-not-empty": true,
-  "tag-no-obsolete": true,
-  "tag-pair": true,
-  "tagname-lowercase": true,
-  "title-require": true
+
+
+<style>
+
+body{
+
+    font-family: Arial, sans-serif;
+
+    margin:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
 }
-```
 
-3\. Run HTMLHint on, for example, all the HTML files in your project:
 
-```shell
-npx htmlhint "**/*.html"
-```
+
+h1{ margin-top:20px; }
+
+
+
+.top-controls{ margin:10px; }
+
+
+
+button, select{
+
+    padding:6px 10px;
+
+    font-size:14px;
+
+}
+
+
+
+.main-square{
+
+    width:90vh;
+
+    height:90vh;
+
+    border:1px solid black;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+
+/* ============================= */
+
+/* PARTE STATICA */
+
+/* ============================= */
+
+
+
+.static-part{
+
+    height:35%;
+
+    border-bottom:1px solid black;
+
+}
+
+.valore-docente{
+    font-weight:bold;
+    font-size:14px !important;
+}
+
+.static-part table{
+
+    width:100%;
+
+    height:100%;
+
+    border-collapse:collapse;
+
+    table-layout:fixed;
+
+}
+
+
+
+.static-part tr{
+
+    height:calc(100% / 6);
+
+}
+
+
+
+.static-part td{
+
+    border:1px solid black;
+
+    text-align:center;
+
+    font-size:11px;
+
+    padding:2px;
+
+}
+
+
+
+/* mini tabella */
+
+.mini-table{
+
+    width:100%;
+
+    height:100%;
+
+    border-collapse:collapse;
+
+    table-layout:fixed;
+
+}
+
+
+
+.mini-table td{
+
+    border:1px solid black;
+
+}
+
+
+
+/* ============================= */
+
+/* PARTE SCROLLABILE */
+
+/* ============================= */
+
+
+
+.scroll-part{
+
+    height:65%;
+
+    overflow-y:auto;
+
+}
+
+
+
+.scroll-part table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    table-layout:fixed;
+
+}
+
+
+
+.scroll-part td{
+
+    border:1px solid black;
+
+    text-align:center;
+
+    font-size:12px;
+
+}
+
+
+
+/* 12 anni visibili esatti */
+
+.scroll-part tbody tr{
+
+    height:calc(100% / 12);
+
+}
+
+.year-col{ width:80px; font-weight:bold; }
+
+.small-col{ width:60px; }
+
+
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+
+<h1>Storia docenti Matematica e Fisica</h1>
+
+
+
+<div class="top-controls">
+
+    <button onclick="window.location.href='storiadocenti.html'">
+
+        Torna indietro
+
+    </button>
+
+    <label>Docenti attuali:
+  <select id="docenteAttuali" onchange="caricaDocente('attuali')"></select>
+</label>
+<label>Docenti storici:
+  <select id="docenteStorici" onchange="caricaDocente('storici')"></select>
+</label>
+<label>Ex docenti:
+  <select id="docenteEx" onchange="caricaDocente('ex')"></select>
+</label>
+
+</div>
+
+
+
+<div class="main-square">
+
+
+
+<!-- ================= STATIC ================= -->
+
+
+
+<div class="static-part">
+
+<table>
+
+
+
+<tr id="rigaSezioni"></tr>
+<tr id="rigaOre"></tr>
+
+
+
+<tr>
+<td>Anno nascita</td>
+<td id="annoNascita" class="valore-docente"></td>
+
+<td>Anno pensione</td>
+<td id="annoPensione" class="valore-docente"></td>
+
+<td colspan="2">Classi con continuità dalla prima alla 5</td>
+<td colspan="4" id="elencoClassi"></td>
+
+<td colspan="2">Docente di matematica con piu classi condivise</td>
+<td colspan="2" id="docenteMatematica" class="valore-docente"></td>
+</tr>
+
+
+<tr>
+<td>Ore Mate</td>
+<td id="oreMate" class="valore-docente"></td>
+
+<td>Ore Fisica</td>
+<td id="oreFisica" class="valore-docente"></td>
+
+<td>Numero programmi</td>
+
+<td colspan="5">
+<table class="mini-table">
+<tr>
+<td></td><td></td><td></td><td></td><td></td>
+</tr>
+<tr>
+<td></td><td></td><td></td><td></td><td></td>
+</tr>
+</table>
+</td>
+
+<td colspan="2">Docente di fisica con piu classi condivise</td>
+<td colspan="2" id="docenteFisica" class="valore-docente"></td>
+</tr>
+
+
+<tr>
+
+<td>Anni liceo</td>
+<td id="anniLiceo" class="valore-docente"></td>
+
+<td>Numero ore</td>
+<td id="numeroOre" class="valore-docente"></td>
+
+<td>Ore biennio</td>
+<td id="oreBiennio" class="valore-docente"></td>
+
+<td>Ore triennio</td>
+<td id="oreTriennio" class="valore-docente"></td>
+
+<td>Ore disp.</td>
+<td id="oreDisp" class="valore-docente"></td>
+
+<td>Numero classi</td>
+<td id="numeroClassi" class="valore-docente"></td>
+
+<td>Classi quinte</td>
+<td id="numeroClassiQuinte" class="valore-docente"></td>
+
+</tr>
+
+
+<!-- <tr>
+  <td class="year-col">Anno</td>
+  <td class="small-col">Ore Tot</td>
+  <td class="small-col">Ore Disp</td>
+  <td colspan="6">Elenco Classi</td>
+  <td colspan="4"></td>
+</tr> -->
+
+
+
+</table>
+
+</div>
+
+
+
+<!-- ================= SCROLL ================= -->
+
+
+
+<div class="scroll-part">
+
+<table>
+
+<tbody id="tableBody"></tbody>
+
+</table>
+
+</div>
+
+
+
+<script>
+
+
+
+const dati = [
+["1516","Alfonso A.","F","1","E"],
+["1516","Alfonso A.","M","4","D"],
+["1516","Alfonso A.","MF","4","E"],
+["1516","Alfonso A.","F","5","A"],
+["1516","Canino A.M.","M","4","C"],
+["1516","Canino A.M.","M","2","B"],
+["1516","Canino A.M.","M","1","E"],
+["1516","Cavallo G.","M","1","G"],
+["1516","Cavallo G.","M","3","A"],
+["1516","Cavallo G.","M","1","A"],
+["1516","Cavallo G.","M","3","C"],
+["1516","Musu L.","M","1","F"],
+["1516","Musu L.","M","3","F"],
+["1516","Musu L.","M","2","F"],
+["1516","Musu L.","M","2","A"],
+["1516","Scotti L.","M","4","A"],
+["1516","Scotti L.","M","3","E"],
+["1516","Scotti L.","M","2","C"],
+["1516","Scotti L.","M","1","C"],
+["1516","Senette G.","M","1","D"],
+["1516","Senette G.","M","1","B"],
+["1516","Senette G.","M","3","B"],
+["1516","Senette G.","M","5","B"],
+["1516","Orlacchio A.","MF","5","C"],
+["1516","Orlacchio A.","MF","2","E"],
+["1516","Orlacchio A.","M","5","G"],
+["1516","Canino A.M.","F","2","C"],
+["1516","Canino A.M.","F","1","G"],
+["1516","Dambrosio D.","F","4","A"],
+["1516","Dambrosio D.","M","4","F"],
+["1516","Dambrosio D.","F","3","C"],
+["1516","Dambrosio D.","F","5","D"],
+["1516","Dambrosio D.","F","1","F"],
+["1516","Dambrosio D.","F","3","F"],
+["1516","Masia R.","F","2","A"],
+["1516","Masia R.","F","3","A"],
+["1516","Masia R.","F","1","D"],
+["1516","Masia R.","M","5","F"],
+["1516","Masia R.","M","5","D"],
+["1516","Masia R.","F","1","C"],
+["1516","Pinna F.","F","4","F"],
+["1516","Pinna F.","MF","3","D"],
+["1516","Pinna F.","F","2","D"],
+["1516","Pinna F.","F","5","G"],
+["1516","Pinna F.","F","1","A"],
+["1516","Sechi R.","F","2","F"],
+["1516","Sechi R.","F","5","F"],
+["1516","Sechi R.","F","4","D"],
+["1516","Sechi R.","F","3","E"],
+["1516","Sechi R.","M","2","D"],
+["1516","Volpe A.","F","2","B"],
+["1516","Volpe A.","F","4","C"],
+["1516","Volpe A.","F","3","B"],
+["1516","Volpe A.","F","1","B"],
+["1516","Volpe A.","F","5","B"],
+["1516","Volpe A.","M","5","A"],
+["1819","Pinna F.","M","1","D"],
+["1617","Sechi M.","MF","1","A"],
+["1617","Sechi M.","F","4","F"],
+["1617","Sechi M.","M","2","A"],
+["1617","Sechi M.","F","1","H"],
+["1617","Pinna F.","F","2","A"],
+["1617","Pinna F.","F","3","D"],
+["1617","Pinna F.","MF","4","D"],
+["1617","Pinna F.","F","5","E"],
+["1617","Pinna F.","F","5","F"],
+["1617","Masia R.","MF","3","A"],
+["1617","Masia R.","MF","4","A"],
+["1617","Masia R.","F","2","D"],
+["1617","Dambrosio D.","MF","5","A"],
+["1617","Dambrosio D.","M","5","F"],
+["1617","Dambrosio D.","F","4","C"],
+["1617","Dambrosio D.","F","2","F"],
+["1617","Dambrosio D.","F","2","C"],
+["1617","Canino A.M.","MF","1","B"],
+["1617","Canino A.M.","MF","5","C"],
+["1617","Canino A.M.","M","2","E"],
+["1617","Senette G.","M","2","B"],
+["1617","Senette G.","M","2","D"],
+["1617","Senette G.","M","4","B"],
+["1617","Mannoni","F","1","I"],
+["1617","Mannoni","F","1","C"],
+["1617","Mannoni","F","2","B"],
+["1617","Mannoni","M","4","C"],
+["1617","Mannoni","M","4","F"],
+["1617","Volpe A.","MF","3","B"],
+["1617","Volpe A.","MF","3","C"],
+["1617","Volpe A.","F","4","B"],
+["1617","Scotti L.","M","1","C"],
+["1617","Scotti L.","M","1","E"],
+["1617","Scotti L.","M","2","C"],
+["1617","Orlacchio A.","MF","1","D"],
+["1617","Orlacchio A.","F","1","G"],
+["1617","Orlacchio A.","F","2","G"],
+["1617","Sechi R.","MF","3","F"],
+["1617","Sechi R.","M","3","D"],
+["1617","Sechi R.","F","4","E"],
+["1617","Sechi R.","F","1","F"],
+["1617","Sechi R.","F","1","E"],
+["1617","Alfonso A.","MF","5","D"],
+["1617","Alfonso A.","M","5","E"],
+["1617","Alfonso A.","M","4","E"],
+["1617","Alfonso A.","F","2","E"],
+["1617","Musu L.","M","1","F"],
+["1617","Musu L.","M","2","F"],
+["1617","Musu L.","M","1","H"],
+["2425","Masia R.","MF","5","E"],
+["1617","Cavallo G.","M","1","G"],
+["1617","Cavallo G.","M","2","G"],
+["2425","Cuccu G.M.","M","1","H"],
+["2425","Fadda A.","F","1","H"],
+["1617","Cavallo G.","M","1","I"],
+["2526","Alfonso A.","MF","4","B"],
+["2526","Alfonso A.","MF","4","G"],
+["2526","Alfonso A.","M","5","D"],
+["2425","Fadda B.","F","5","C"],
+["2425","Putzulu S.","F","1","F"],
+["2425","Cavallo G.","M","1","A"],
+["2425","Cuccu G.M.","F","1","C"],
+["2425","Cuccu G.M.","F","1","A"],
+["2425","Cavallo G.","M","2","A"],
+["2425","Fadda B.","F","2","A"],
+["2425","Masia R.","M","3","A"],
+["2425","Santa Maria M.","F","3","A"],
+["2425","Masia R.","MF","4","A"],
+["2425","Ferri G.","MF","5","A"],
+["2425","Senette G.","M","1","B"],
+["2425","Fadda B.","F","1","B"],
+["2425","Sechi R.","MF","2","B"],
+["2425","Alfonso A.","MF","3","B"],
+["2425","Pinna F.","MF","4","B"],
+["2425","Pinna F.","MF","5","B"],
+["2425","Scotti L.","M","1","C"],
+["2425","Scotti L.","M","2","C"],
+["2425","Lionti R.","F","2","C"],
+["2425","Mastino M.","MF","3","C"],
+["2425","Lionti R.","M","5","C"],
+["2425","Putzulu S.","M","1","D"],
+["2425","Greco R.","F","1","D"],
+["2425","Putzulu S.","MF","2","D"],
+["2425","Ferri G.","M","3","D"],
+["2425","Putzulu S.","F","3","D"],
+["2425","Scala D.","MF","4","D"],
+["2425","Sechi M.","MF","5","D"],
+["2425","Sechi R.","M","1","E"],
+["2425","Fadda B.","F","1","E"],
+["2425","Scotti L.","M","2","E"],
+["2425","Sechi R.","F","2","E"],
+["2425","Canino A.M.","M","3","E"],
+["2425","Sechi R.","F","3","E"],
+["2425","Santa Maria M.","MF","4","E"],
+["2425","Senette G.","M","1","F"],
+["2425","Senette G.","M","2","F"],
+["2425","Simula P.","F","2","F"],
+["2425","Bernardini J.","M","3","F"],
+["2425","Fadda A.","F","3","F"],
+["2425","Bernardini J.","MF","4","F"],
+["2425","Bernardini J.","MF","5","F"],
+["2425","Cavallo G.","M","1","G"],
+["2425","Fadda B.","F","1","G"],
+["2425","Mastino M.","MF","2","G"],
+["2425","Alfonso A.","MF","3","G"],
+["2425","Simula P.","MF","4","G"],
+["2425","Lionti R.","M","5","G"],
+["2425","Alfonso A.","F","5","G"],
+["2425","Lionti R.","M","2","H"],
+["2425","Simula P.","F","2","H"],
+["2425","Simula P.","MF","3","H"],
+["2425","Canino A.M.","M","4","H"],
+["2425","Santa Maria M.","F","4","H"],
+["2425","Canino A.M.","M","5","H"],
+["2425","Fadda A.","F","5","H"],
+["2425","Mastino M.","M","1","I"],
+["2425","Cuccu G.M.","F","1","I"],
+["2425","Scala D.","M","2","I"],
+["2425","Dambrosio D.","F","2","I"],
+["2425","Dambrosio D.","MF","3","I"],
+["2425","Greco R.","MF","4","I"],
+["2425","Greco R.","MF","5","I"],
+["2425","Senette G.","M","2","L"],
+["2425","Scala D.","F","2","L"],
+["2425","Aquino V.","M","3","L"],
+["2425","Scala D.","F","3","L"],
+["2425","Dambrosio D.","MF","4","L"],
+["2425","Sechi M.","M","4","M"],
+["2425","Santa Maria M.","F","4","M"],
+["2425","Pinna F.","M","3","N"],
+["2425","Fadda A.","F","3","N"],
+["2425","Fadda A.","MF","4","N"],
+["2425","Aquino V.","MF","4","P"],
+["2526","Aquino V.","MF","5","P"],
+["2526","Aquino V.","M","4","L"],
+["2526","Bernardini J.","MF","5","F"],
+["2526","Bernardini J.","M","4","F"],
+["2526","Bernardini J.","MF","1","C"],
+["2526","Canino A.M.","MF","5","H"],
+["2526","Canino A.M.","M","4","E"],
+["2526","Canino A.M.","M","3","L"],
+["2526","Cavallo G.","M","2","A"],
+["2526","Cavallo G.","M","2","G"],
+["2526","Cavallo G.","M","1","A"],
+["2526","Cuccu G.M.","M","2","H"],
+["2526","Cuccu G.M.","F","2","A"],
+["2526","Cuccu G.M.","F","2","I"],
+["2526","Cuccu G.M.","M","1","H"],
+["2526","Dambrosio D.","MF","5","L"],
+["2526","Dambrosio D.","MF","4","I"],
+["2526","Dambrosio D.","F","3","I"],
+["2526","Fadda A.","MF","5","N"],
+["2526","Fadda A.","F","4","F"],
+["2526","Fadda A.","F","4","N"],
+["2526","Fadda A.","F","3","H"],
+["2526","Fadda A.","F","2","H"],
+["2526","Fadda B.","M","1","E"],
+["2526","Fadda B.","F","2","B"],
+["2526","Fadda B.","F","2","G"],
+["2526","Fadda B.","F","2","E"],
+["2526","Ferri G.","M","3","I"],
+["2526","Ferri G.","MF","4","D"],
+["2526","Greco R.","MF","5","I"],
+["2526","Greco R.","F","1","F"],
+["2526","Greco R.","MF","2","D"],
+["2526","Lionti R.","M","3","H"],
+["2526","Lionti R.","M","3","C"],
+["2526","Lionti R.","M","2","C"],
+["2526","Masia R.","MF","5","A"],
+["2526","Masia R.","M","4","A"],
+["2526","Masia R.","MF","3","A"],
+["2526","Mastino M.","MF","4","C"],
+["2526","Mastino M.","M","3","G"],
+["2526","Mastino M.","M","2","I"],
+["2526","Pinna F.","MF","5","B"],
+["2526","Pinna F.","M","4","N"],
+["2526","Pinna F.","MF","1","D"],
+["2526","Santa Maria M.","MF","5","E"],
+["2526","Santa Maria M.","F","5","M"],
+["2526","Santa Maria M.","F","4","A"],
+["2526","Santa Maria M.","F","3","L"],
+["2526","Santa Maria M.","F","2","C"],
+["2526","Sechi M.","M","5","M"],
+["2526","Sechi R.","MF","3","B"],
+["2526","Sechi R.","M","2","E"],
+["2526","Sechi R.","M","3","E"],
+["2526","Sechi R.","F","4","E"],
+["2526","Putzulu S.","MF","3","D"],
+["2526","Putzulu S.","M","1","F"],
+["2526","Putzulu S.","F","3","F"],
+["2526","Putzulu S.","F","2","F"],
+["2526","Senette G.","M","3","F"],
+["2526","Senette G.","M","2","B"],
+["2526","Senette G.","M","2","F"],
+["2526","Senette G.","M","1","B"],
+["2526","Simula P.","MF","5","G"],
+["2526","Simula P.","MF","4","H"],
+["2526","Simula P.","F","5","D"],
+["2526","Zizzo G.","F","1","A"],
+["2526","Zizzo G.","F","1","H"],
+["2526","Zizzo G.","F","3","C"],
+["2526","Cossu G.","F","1","G"],
+["2526","Cossu G.","F","1","E"],
+["2526","Cossu G.","F","3","E"],
+["2526","Cossu G.","F","3","G"],
+["2526","Cossu G.","F","4","L"],
+["2526","Colombino D.","M","1","G"],
+["2526","Colombino D.","F","1","B"],
+["2324","Simula P.","MF","3","G"],
+["2324","Fadda B.","M","1","B"],
+["2324","Fadda B.","M","1","I"],
+["2324","Cavallo G.","M","1","A"],
+["2324","Cuccu G.M.","MF","1","G"],
+["2324","Cavallo G.","M","2","A"],
+["2324","Masia R.","MF","3","A"],
+["2324","Ferri G.","M","4","A"],
+["2324","Masia R.","MF","5","A"],
+["2324","Fadda B.","F","1","A"],
+["2324","Cuccu G.M.","F","2","A"],
+["2324","Masia R.","F","4","A"],
+["2324","Canino A.M.","MF","2","B"],
+["2324","Senette G.","M","3","B"],
+["2324","Pinna F.","MF","4","B"],
+["2324","Alfonso A.","MF","5","B"],
+["2324","Sechi R.","F","1","B"],
+["2324","Pinna F.","F","3","B"],
+["2324","Scotti L.","M","1","C"],
+["2324","Mastino M.","MF","2","C"],
+["2324","Lionti R.","MF","4","C"],
+["2324","Ferri G.","MF","5","C"],
+["2324","Lionti R.","F","1","C"],
+["2324","Putzulu S.","MF","1","D"],
+["2324","Lionti R.","M","1","H"],
+["2324","Putzulu S.","MF","2","D"],
+["2324","Orlacchio A.","MF","3","D"],
+["2324","Sechi M.","MF","4","D"],
+["2324","Orlacchio A.","M","5","D"],
+["2324","Pinna F.","F","5","D"],
+["2324","Scotti L.","M","1","E"],
+["2324","Scotti L.","M","2","E"],
+["2324","Santa Maria M.","MF","3","E"],
+["2324","Sechi R.","M","4","E"],
+["2324","Sechi R.","MF","5","E"],
+["2324","Cuccu G.M.","F","1","E"],
+["2324","Sechi R.","F","2","E"],
+["2324","Canino A.M.","F","4","E"],
+["2324","Senette G.","M","1","F"],
+["2324","Senette G.","M","2","F"],
+["2324","Bernardini J.","MF","3","F"],
+["2324","Bernardini J.","MF","4","F"],
+["2324","Putzulu S.","M","5","F"],
+["2324","Simula P.","F","1","F"],
+["2324","Fadda B.","F","2","F"],
+["2324","Greco R.","F","5","F"],
+["2324","Cavallo G.","M","2","G"],
+["2324","Lionti R.","M","4","G"],
+["2324","Alfonso A.","MF","5","G"],
+["2324","Dambrosio D.","F","2","G"],
+["2324","Alfonso A.","F","4","G"],
+["2324","Simula P.","MF","2","H"],
+["2324","Canino A.M.","M","3","H"],
+["2324","Canino A.M.","M","4","H"],
+["2324","Bernardini J.","M","5","H"],
+["2324","Simula P.","F","1","H"],
+["2324","Fadda A.","F","3","H"],
+["2324","Fadda A.","F","4","H"],
+["2324","Fadda A.","F","5","H"],
+["2324","Dambrosio D.","MF","2","I"],
+["2324","Greco R.","MF","3","I"],
+["2324","Greco R.","MF","4","I"],
+["2324","Dambrosio D.","F","1","I"],
+["2324","Senette G.","M","1","L"],
+["2324","Aquino V.","M","2","L"],
+["2324","Dambrosio D.","MF","3","L"],
+["2324","Santa Maria M.","MF","5","L"],
+["2324","Aquino V.","F","1","L"],
+["2324","Fadda A.","F","2","L"],
+["2324","Sechi M.","M","3","M"],
+["2324","Santa Maria M.","F","3","M"],
+["2324","Cuccu G.M.","MF","2","N"],
+["2324","Fadda A.","MF","3","N"],
+["2324","Aquino V.","MF","3","P"],
+["1718","Orlacchio A.","MPM","1","M"],
+["1718","Pinna F.","FPF","1","M"],
+["1819","Orlacchio A.","MPM","1","M"],
+["1819","Pinna F.","FPF","1","M"],
+["1819","Orlacchio A.","MPM","2","M"],
+["1819","Pinna F.","FPF","2","M"],
+["1920","Orlacchio A.","MPM","2","M"],
+["1920","Pinna F.","FPF","2","M"],
+["1920","Orlacchio A.","MPM","3","M"],
+["1920","Pinna F.","FPF","3","M"],
+["1920","Sechi M.","MPM","1","M"],
+["1920","Pinna F.","FPF","1","M"],
+["1920","Aquino V.","MPM","1","I"],
+["1920","Pinna F.","FPF","1","I"],
+["2021","Orlacchio A.","MPM","3","M"],
+["2021","Pinna F.","FPF","3","M"],
+["2021","Aquino V.","MPM","4","M"],
+["2021","Pinna F.","FPF","4","M"],
+["2021","Sechi M.","MPM","2","M"],
+["2021","Pinna F.","FPF","2","M"],
+["2021","Aquino V.","MPM","2","I"],
+["2021","Santa Maria M.","FPF","2","I"],
+["2122","Orlacchio A.","MFPMPF","4","M"],
+["2122","Aquino V.","MPM","5","M"],
+["2122","Pinna F.","FPF","5","M"],
+["2122","Sechi M.","MPM","3","M"],
+["2122","Pinna F.","FPF","3","M"],
+["2122","Aquino V.","MPM","3","I"],
+["2122","Mastino M.","FPF","3","I"],
+["2223","Fadda B.","M","1","L"],
+["2223","Orlacchio A.","MFPMPF","5","M"],
+["2223","Sechi M.","MPM","4","M"],
+["2223","Pinna F.","FPF","4","M"],
+["2223","Aquino V.","MPM","4","I"],
+["2223","Mastino M.","FPF","4","I"],
+["2324","Orlacchio A.","MT","1","M"],
+["1617","Orlacchio A.","MF","3","E"],
+["2324","Sechi M.","MPM","5","M"],
+["2324","Sechi M.","F","1","M"],
+["2324","Pinna F.","FPF","5","M"],
+["2324","Aquino V.","MPM","5","I"],
+["2324","Mastino M.","FPF","5","I"],
+["2425","Sechi M.","MT","1","M"],
+["2425","Aquino V.","F","1","M"],
+["2425","Aquino V.","M","2","M"],
+["2425","Lionti R.","FT","2","M"],
+["2526","Sechi M.","MT","2","M"],
+["2526","Sechi M.","MT","1","M"],
+["2526","Lionti R.","F","3","M"],
+["2526","Lionti R.","F","1","M"],
+["2526","Aquino V.","F","2","M"],
+["2526","Aquino V.","MPM","3","M"],
+["2223","Cavallo G.","M","1","A"],
+["2223","Cavallo G.","M","2","A"],
+["2223","Ferri G.","MF","3","A"],
+["2223","Masia R.","MF","4","A"],
+["2223","Masia R.","MF","5","A"],
+["2223","Ferri G.","F","2","A"],
+["2223","Fadda B.","F","2","B"],
+["2223","Canino A.M.","MF","1","B"],
+["2223","Senette G.","M","2","B"],
+["2223","Senette G.","M","3","B"],
+["2223","Alfonso A.","MF","4","B"],
+["2223","Sechi R.","M","5","B"],
+["2223","Pinna F.","F","3","B"],
+["2223","Canino A.M.","F","5","B"],
+["2223","Scotti L.","M","3","C"],
+["2223","Scotti L.","M","2","C"],
+["2223","Fadda B.","F","1","F"],
+["2223","Fadda B.","F","1","C"],
+["2223","Fadda B.","F","2","C"],
+["2223","Mastino M.","M","1","C"],
+["2223","Lionti R.","F","3","C"],
+["2223","Ferri G.","MF","4","C"],
+["2223","Ferri G.","F","1","A"],
+["2223","Lionti R.","MF","5","C"],
+["2223","Pinna F.","MF","5","D"],
+["2223","Putzulu S.","MF","1","D"],
+["2223","Orlacchio A.","M","2","D"],
+["2223","Santa Maria M.","F","2","D"],
+["2223","Sechi M.","MF","3","D"],
+["2223","Orlacchio A.","M","4","D"],
+["2223","Pinna F.","F","4","D"],
+["2223","Scotti L.","M","1","E"],
+["2223","Santa Maria M.","MF","2","E"],
+["2223","Sechi R.","MF","4","E"],
+["2223","Sechi R.","MF","3","E"],
+["2223","Fadda B.","F","1","E"],
+["2223","Masia R.","M","5","E"],
+["2223","Canino A.M.","F","5","E"],
+["2223","Senette G.","M","1","F"],
+["2223","Bernardini J.","MF","3","F"],
+["2223","Bernardini J.","MF","2","F"],
+["2223","Putzulu S.","M","4","F"],
+["2223","Putzulu S.","MF","5","F"],
+["2223","Greco R.","F","4","F"],
+["2223","Cuccu G.M.","MF","2","G"],
+["2223","Cavallo G.","M","1","G"],
+["2223","Simula P.","MF","5","G"],
+["2223","Simula P.","MF","1","H"],
+["2223","Simula P.","M","3","G"],
+["2223","Alfonso A.","MF","4","G"],
+["2223","Alfonso A.","F","3","G"],
+["2223","Lionti R.","MF","5","H"],
+["2223","Fadda A.","MF","2","H"],
+["2223","Canino A.M.","M","3","H"],
+["2223","Bernardini J.","M","4","H"],
+["2223","Fadda A.","F","3","H"],
+["2223","Fadda A.","F","4","H"],
+["2223","Dambrosio D.","MF","1","I"],
+["2223","Greco R.","MF","5","I"],
+["2223","Greco R.","MF","2","I"],
+["2223","Mastino M.","MF","3","I"],
+["2223","Dambrosio D.","F","1","L"],
+["2223","Dambrosio D.","MF","2","L"],
+["2223","Santa Maria M.","MF","4","L"],
+["2223","Aquino V.","MF","5","L"],
+["2223","Sechi M.","M","2","M"],
+["2223","Santa Maria M.","F","2","M"],
+["2223","Cuccu G.M.","M","1","N"],
+["2223","Mastino M.","F","1","N"],
+["2223","Cuccu G.M.","MF","2","O"],
+["2223","Fadda A.","MF","2","N"],
+["2223","Aquino V.","MF","2","P"],
+["2223","Dambrosio D.","F","1","G"],
+
+["2122","Fadda B.","M","1","O"],
+["2122","Greco R.","MF","1","I"],
+["2122","Fadda A.","MF","1","N"],
+["2122","Cavallo G.","M","1","A"],
+["2122","Cavallo G.","M","2","A"],
+["2122","Mastino M.","MF","3","A"],
+["2122","Masia R.","MF","4","A"],
+["2122","Masia R.","MF","5","A"],
+["2122","Ferri G.","F","2","A"],
+["2122","Ferri G.","F","1","A"],
+["2122","Fadda B.","F","2","B"],
+["2122","Fadda B.","F","1","B"],
+["2122","Senette G.","M","1","B"],
+["2122","Senette G.","M","2","B"],
+["2122","Senette G.","M","3","B"],
+["2122","Alfonso A.","MF","5","B"],
+["2122","Sechi R.","M","4","B"],
+["2122","Alfonso A.","F","3","B"],
+["2122","Canino A.M.","F","4","B"],
+["2122","Scotti L.","M","3","C"],
+["2122","Ursino M.G.","F","3","C"],
+["2122","Scotti L.","M","2","C"],
+["2122","Scotti L.","M","1","C"],
+["2122","Lionti R.","MF","4","C"],
+["2122","Lionti R.","MF","4","H"],
+["2122","Lionti R.","F","2","C"],
+["2122","Simula P.","MF","5","C"],
+["2122","Pinna F.","MF","4","D"],
+["2122","Putzulu S.","MF","5","D"],
+["2122","Orlacchio A.","M","1","D"],
+["2122","Canino A.M.","F","1","D"],
+["2122","Sechi M.","MF","2","D"],
+["2122","Orlacchio A.","M","3","D"],
+["2122","Pinna F.","F","3","D"],
+["2122","Ursino M.G.","M","2","E"],
+["2122","Santa Maria M.","MF","1","E"],
+["2122","Santa Maria M.","F","2","E"],
+["2122","Sechi R.","MF","5","E"],
+["2122","Sechi R.","MF","3","E"],
+["2122","Masia R.","M","4","E"],
+["2122","Canino A.M.","F","4","E"],
+["2122","Canino A.M.","F","2","F"],
+["2122","Bernardini J.","MF","1","F"],
+["2122","Bernardini J.","M","2","F"],
+["2122","Putzulu S.","M","3","F"],
+["2122","Putzulu S.","MF","4","F"],
+["2122","Ferri G.","MF","5","F"],
+["2122","Greco R.","MF","4","I"],
+["2122","Greco R.","F","3","F"],
+["2122","Cuccu G.M.","MF","1","G"],
+["2122","Cavallo G.","M","2","G"],
+["2122","Simula P.","MF","4","G"],
+["2122","Alfonso A.","MF","3","G"],
+["2122","Bernardini J.","MF","5","G"],
+["2122","Lionti R.","F","2","H"],
+["2122","Scotti L.","M","2","H"],
+["2122","Fadda A.","MF","1","H"],
+["2122","Senette G.","M","3","H"],
+["2122","Ursino M.G.","F","3","H"],
+["2122","Simula P.","M","5","H"],
+["2122","Fadda A.","F","5","H"],
+["2122","Dambrosio D.","MF","5","I"],
+["2122","Mastino M.","MF","2","I"],
+["2122","Ferri G.","MF","5","L"],
+["2122","Dambrosio D.","MF","1","L"],
+["2122","Dambrosio D.","M","3","L"],
+["2122","Santa Maria M.","F","3","L"],
+["2122","Aquino V.","MF","4","L"],
+["2122","Sechi M.","M","1","M"],
+["2122","Santa Maria M.","F","1","M"],
+["2122","Cuccu G.M.","MF","1","P"],
+["2122","Cuccu G.M.","F","1","O"],
+["2122","Cuccu G.M.","F","2","G"],
+["2122","Santa Maria M.","F","1","C"],
+["1819","Cravotta A.","F","4","F"],
+["1819","Cravotta A.","F","4","D"],
+["1819","Cravotta A.","F","3","D"],
+["1819","Cravotta A.","F","2","H"],
+["1819","Cravotta A.","F","1","D"],
+["1819","Cravotta A.","F","1","H"],
+["1819","Cravotta A.","F","1","A"],
+
+["1819","Aquino V.","MF","1","L"],
+["1819","Aquino V.","M","5","E"],
+["1819","Masia R.","M","1","A"],
+["1819","Masia R.","MF","5","A"],
+["1819","Sechi M.","MF","2","A"],
+["1819","Sechi M.","MF","3","A"],
+["1819","Sechi M.","M","4","A"],
+["1819","Putzulu S.","F","4","A"],
+["1819","Senette G.","M","1","B"],
+["1819","Senette G.","M","2","B"],
+["1819","Senette G.","M","4","B"],
+["1819","Canino A.M.","F","1","B"],
+["1819","Canino A.M.","F","2","B"],
+["1819","Canino A.M.","MF","3","B"],
+["1819","Canino A.M.","F","4","B"],
+["1819","Volpe A.","MF","5","B"],
+["1819","Scotti L.","M","1","C"],
+["1819","Scotti L.","M","2","C"],
+["1819","Scotti L.","M","3","C"],
+["1819","Dambrosio D.","F","1","C"],
+["1819","Dambrosio D.","F","2","C"],
+["1819","Dambrosio D.","F","3","C"],
+["1819","Dambrosio D.","MF","4","C"],
+["1819","Volpe A.","MF","5","C"],
+["1819","Pinna F.","MF","5","D"],
+["1819","Putzulu S.","MF","2","D"],
+["1819","Orlacchio A.","M","3","D"],
+["1819","Senette G.","M","4","D"],
+["1819","Sechi R.","M","2","E"],
+["1819","Alfonso A.","MF","4","E"],
+["1819","Alfonso A.","MF","3","E"],
+["1819","Masia R.","M","1","E"],
+["1819","Alfonso A.","F","2","E"],
+["1819","Alfonso A.","F","1","E"],
+["1819","Musu L.","M","1","F"],
+["1819","Putzulu S.","F","1","F"],
+["1819","Putzulu S.","M","2","F"],
+["1819","Ferri G.","F","2","F"],
+["1819","Ferri G.","MF","3","F"],
+["1819","Canino A.M.","M","4","F"],
+["1819","Sechi R.","MF","5","F"],
+["1819","Cavallo G.","M","2","G"],
+["1819","Simula P.","MF","1","G"],
+["1819","Simula P.","MF","3","H"],
+["1819","Simula P.","F","2","G"],
+["1819","Sechi R.","MF","3","G"],
+["1819","Scotti L.","M","4","G"],
+["1819","Dambrosio D.","F","4","G"],
+["1819","Musu L.","M","1","H"],
+["1819","Musu L.","M","2","H"],
+["1819","Aquino V.","F","3","I"],
+["1819","Aquino V.","F","2","I"],
+["1819","Aquino V.","F","1","I"],
+["1819","Volpe A.","M","3","I"],
+["1819","Cavallo G.","M","2","I"],
+["1819","Cavallo G.","M","1","I"],
+["1819","Ferri G.","MF","2","L"],
+["1819","Orlacchio A.","F","5","E"],
+
+["1920","Fadda B.","MF","1","A"],
+["1920","Fadda B.","M","4","I"],
+["1920","Masia R.","MF","2","A"],
+["1920","Masia R.","MF","3","A"],
+["1920","Sechi M.","MF","4","A"],
+["1920","Sechi M.","M","5","A"],
+["1920","Putzulu S.","F","5","A"],
+["1920","Senette G.","M","1","B"],
+["1920","Senette G.","M","2","B"],
+["1920","Senette G.","M","3","B"],
+["1920","Cadeddu S.","F","1","B"],
+["1920","Luciano","F","2","B"],
+["1920","Cadeddu S.","F","3","B"],
+["1920","Canino A.M.","F","5","B"],
+["1920","Cravotta A.","M","5","B"],
+["1920","Scotti L.","M","1","C"],
+["1920","Scotti L.","M","2","C"],
+["1920","Scotti L.","M","3","C"],
+["1920","Scotti L.","M","4","C"],
+["1920","Dambrosio D.","F","2","C"],
+["1920","Dambrosio D.","MF","5","C"],
+["1920","Dambrosio D.","F","4","C"],
+["1920","Cadeddu S.","F","1","C"],
+["1920","Cadeddu S.","F","3","C"],
+["1920","Cadeddu S.","MF","1","D"],
+["1920","Pinna F.","MF","2","D"],
+["1920","Putzulu S.","MF","3","D"],
+["1920","Orlacchio A.","MF","4","D"],
+["1920","Cravotta A.","F","5","D"],
+["1920","Senette G.","M","5","D"],
+["1920","Sechi R.","M","3","E"],
+["1920","Sechi R.","MF","1","E"],
+["1920","Alfonso A.","MF","5","E"],
+["1920","Alfonso A.","MF","4","E"],
+["1920","Masia R.","M","2","E"],
+["1920","Fadda B.","F","3","E"],
+["1920","Fadda B.","F","2","E"],
+["1920","Musu L.","M","1","F"],
+["1920","Putzulu S.","F","1","F"],
+["1920","Putzulu S.","MF","2","F"],
+["1920","Ferri G.","M","3","F"],
+["1920","Dambrosio D.","F","3","F"],
+["1920","Ferri G.","MF","4","F"],
+["1920","Cravotta A.","MF","5","F"],
+["1920","Cavallo G.","M","1","G"],
+["1920","Luciano","F","1","G"],
+["1920","Simula P.","MF","2","G"],
+["1920","Simula P.","F","3","G"],
+["1920","Canino A.M.","M","3","G"],
+["1920","Sechi R.","MF","4","G"],
+["1920","Alfonso A.","M","5","G"],
+["1920","Dambrosio D.","F","5","G"],
+["1920","Musu L.","M","1","H"],
+["1920","Musu L.","M","2","H"],
+["1920","Canino A.M.","M","3","H"],
+["1920","Cravotta A.","F","3","H"],
+["1920","Simula P.","MF","4","H"],
+["1920","Simula P.","F","2","H"],
+["1920","Luciano","F","1","H"],
+["1920","Aquino V.","F","4","I"],
+["1920","Aquino V.","F","3","I"],
+["1920","Canino A.M.","M","3","I"],
+["1920","Cavallo G.","M","2","I"],
+["1920","Fadda B.","F","2","I"],
+["1920","Ferri G.","MF","3","L"],
+["1920","Cavallo G.","M","1","L"],
+["1920","Pinna F.","F","1","L"],
+["1920","Aquino V.","MF","2","L"],
+
+["2021","Fadda B.","MF","1","F"],
+["2021","Cavallo G.","M","1","A"],
+["2021","Mastino M.","MF","2","A"],
+["2021","Masia R.","MF","3","A"],
+["2021","Masia R.","MF","4","A"],
+["2021","Sechi M.","MF","5","A"],
+["2021","Fadda B.","F","1","A"],
+["2021","Alfonso A.","F","2","B"],
+["2021","Alfonso A.","F","2","G"],
+["2021","Fadda B.","F","1","B"],
+["2021","Senette G.","M","1","B"],
+["2021","Senette G.","M","2","B"],
+["2021","Senette G.","M","3","B"],
+["2021","Alfonso A.","MF","4","B"],
+["2021","Mastino M.","F","3","B"],
+["2021","Scotti L.","M","1","C"],
+["2021","Scotti L.","M","2","C"],
+["2021","Scotti L.","M","3","C"],
+["2021","Scotti L.","M","4","C"],
+["2021","Dambrosio D.","F","3","C"],
+["2021","Dambrosio D.","MF","5","C"],
+["2021","Luciano","F","4","C"],
+["2021","Luciano","F","2","C"],
+["2021","Fadda B.","F","1","C"],
+["2021","Pinna F.","MF","3","D"],
+["2021","Putzulu S.","MF","4","D"],
+["2021","Sechi M.","M","1","D"],
+["2021","Orlacchio A.","F","1","D"],
+["2021","Orlacchio A.","MF","5","D"],
+["2021","Santa Maria M.","F","2","D"],
+["2021","Cravotta A.","M","2","D"],
+["2021","Santa Maria M.","MF","2","L"],
+["2021","Santa Maria M.","MF","1","E"],
+["2021","Sechi R.","M","4","E"],
+["2021","Sechi R.","MF","2","E"],
+["2021","Alfonso A.","MF","5","E"],
+["2021","Masia R.","M","3","E"],
+["2021","Cravotta A.","F","3","E"],
+["2021","Cravotta A.","F","4","E"],
+["2021","Fadda B.","F","2","F"],
+["2021","Putzulu S.","M","2","F"],
+["2021","Putzulu S.","MF","3","F"],
+["2021","Dambrosio D.","F","4","F"],
+["2021","Ferri G.","M","4","F"],
+["2021","Ferri G.","MF","5","F"],
+["2021","Cavallo G.","M","1","G"],
+["2021","Cavallo G.","M","2","G"],
+["2021","Alfonso A.","F","1","G"],
+["2021","Simula P.","MF","3","G"],
+["2021","Canino A.M.","M","4","G"],
+["2021","Simula P.","F","4","G"],
+["2021","Sechi R.","MF","5","G"],
+["2021","Luciano","MF","1","H"],
+["2021","Luciano","F","4","H"],
+["2021","Luciano","F","2","H"],
+["2021","Senette G.","M","2","H"],
+["2021","Canino A.M.","MF","3","H"],
+["2021","Simula P.","M","4","H"],
+["2021","Simula P.","MF","5","H"],
+["2021","Dambrosio D.","F","4","I"],
+["2021","Dambrosio D.","F","5","I"],
+["2021","Canino A.M.","M","4","I"],
+["2021","Mastino M.","MF","1","I"],
+["2021","Cravotta A.","MF","3","I"],
+["2021","Orlacchio A.","M","5","I"],
+["2021","Ferri G.","MF","4","L"],
+["2021","Aquino V.","MF","3","L"],
+["1718","Ferri G.","MF","1","L"],
+["1718","Masia R.","MF","5","A"],
+["1718","Masia R.","MF","4","A"],
+["1718","Sechi M.","MF","1","A"],
+["1718","Sechi M.","MF","2","A"],
+["1718","Sechi M.","M","3","A"],
+["1718","Senette G.","M","1","B"],
+["1718","Senette G.","M","5","B"],
+["1718","Senette G.","M","3","B"],
+["1718","Canino A.M.","F","1","B"],
+["1718","Canino A.M.","MF","2","B"],
+["1718","Volpe A.","MF","4","B"],
+["1718","Volpe A.","F","3","B"],
+["1718","Volpe A.","F","5","B"],
+["1718","Scotti L.","M","1","C"],
+["1718","Scotti L.","M","2","C"],
+["1718","Dambrosio D.","F","1","C"],
+["1718","Dambrosio D.","F","2","C"],
+["1718","Dambrosio D.","MF","3","C"],
+["1718","Volpe A.","MF","4","C"],
+["1718","Pinna F.","MF","5","D"],
+["1718","Pinna F.","F","4","D"],
+["1718","Sechi R.","M","4","D"],
+["1718","Putzulu S.","MF","1","D"],
+["1718","Orlacchio A.","M","2","D"],
+["1718","Pinna F.","F","2","D"],
+["1718","Senette G.","M","3","D"],
+["1718","Masia R.","F","3","D"],
+["1718","Sechi R.","M","1","E"],
+["1718","Sechi R.","F","5","E"],
+["1718","Alfonso A.","M","5","E"],
+["1718","Orlacchio A.","MF","4","E"],
+["1718","Canino A.M.","M","3","E"],
+["1718","Alfonso A.","F","3","E"],
+["1718","Alfonso A.","F","1","E"],
+["1718","Scotti L.","M","2","E"],
+["1718","Alfonso A.","F","2","E"],
+["1718","Musu L.","M","2","F"],
+["1718","Ferri G.","F","2","F"],
+["1718","Ferri G.","F","1","F"],
+["1718","Ferri G.","MF","5","C"],
+["1718","Canino A.M.","M","3","F"],
+["1718","Putzulu S.","F","3","F"],
+["1718","Putzulu S.","M","1","F"],
+["1718","Sechi R.","MF","4","F"],
+["1718","Alfonso A.","MF","5","F"],
+["1718","Cavallo G.","M","1","G"],
+["1718","Sechi R.","M","2","G"],
+["1718","Scotti L.","M","3","G"],
+["1718","Dambrosio D.","F","3","G"],
+["1718","Dambrosio D.","F","2","G"],
+["1718","Dambrosio D.","F","1","G"],
+["1718","Musu L.","M","1","H"],
+["1718","Musu L.","M","2","H"],
+["1718","Pinna F.","F","2","H"],
+["1718","Masia R.","F","1","H"],
+["1718","Mannoni","F","2","I"],
+["1718","Mannoni","F","1","I"],
+["1718","Cavallo G.","M","2","I"],
+["1718","Cavallo G.","M","1","I"],
+["1718","Putzulu S.","F","3","A"],
+]; 
+
+
+const datiAnni = {
+    "D'ambrosio D.": { nascita: 1959, pensione: "2026" },
+    "Senette G.": { nascita: 1961, pensione: "2028" },
+    "Aquino V.": { nascita: 1965, pensione: "2032" },
+    "Fadda B.": { nascita: 1966, pensione: "2033" },
+    "Ferri G.": { nascita: 1966, pensione: "2033" },
+    "Zizzo G.": { nascita: 1968, pensione: "2035" },
+    "Alfonso A.": { nascita: 1971, pensione: "2038" },
+    "Sechi R.": { nascita: 1971, pensione: "2038" },
+    "Fadda A.": { nascita: 1972, pensione: "2039" },
+    "Cuccu G.M.": { nascita: 1974, pensione: "2041" },
+    "Greco R.": { nascita: 1974, pensione: "2041" },
+    "Bernardini J.": { nascita: 1976, pensione: "2043" },
+    "Putzulu S.": { nascita: 1977, pensione: "2044" },
+    "Sechi M.": { nascita: 1977, pensione: "2044" },
+    "Simula P.": { nascita: 1978, pensione: "2045" },
+    "Lionti R.": { nascita: 1979, pensione: "2046" },
+    "Cossu G.": { nascita: 1981, pensione: "2048" },
+    "Colombino D.": { nascita: 1982, pensione: "2049" },
+    "Santa Maria M.": { nascita: 1989, pensione: "2056" },
+    "Mastino M.": { nascita: 1991, pensione: "2058" },
+    "Volpe A.": { nascita: 1971, pensione: "2038" },
+    "Orlacchio A.": { nascita: 1963, pensione: "" },
+    "Scotti L.": { nascita: 1958, pensione: "2025" },
+    "Cadeddu S.": { nascita: 1974, pensione: "2041" },
+    "Cravotta A.": { nascita: 1977, pensione: "2044" },
+    "Ursino M.G.": { nascita: 1973, pensione: "2040" }
+};
+
+
+function generaAnni(){
+    const anni=[];
+    for(let i=1923;i<=2025;i++){   // esteso fino al 2026
+        let next=(i+1).toString().slice(-2);
+        anni.push(i+"/"+next);
+    }
+    return anni;
+}
+
+
+
+const anni=generaAnni();
+
+
+function caricaDocentiDivisi() {
+    const attuali = document.getElementById("docenteAttuali");
+    const storici = document.getElementById("docenteStorici");
+    const ex = document.getElementById("docenteEx");
+
+    attuali.innerHTML = "";
+    storici.innerHTML = "";
+    ex.innerHTML = "";
+
+    const nomi = [...new Set(dati.map(d => d[1]))];
+
+    nomi.sort();
+
+    nomi.forEach(nome => {
+        // Conta gli anni insegnati
+        const anniInsegnati = new Set(dati.filter(d => d[1] === nome).map(d => convertiAnno(d[0])));
+        const haClasse2025 = dati.some(d => d[1] === nome && convertiAnno(d[0]) === "2025/26");
+
+        const option = document.createElement("option");
+        option.value = nome;
+        option.textContent = nome;
+
+        if (haClasse2025) {
+            attuali.appendChild(option);
+        } else if (anniInsegnati.size >= 4) {
+            storici.appendChild(option);
+        } else {
+            ex.appendChild(option);
+        }
+    });
+}
+
+
+function coloraClasse(cella, materia, annoClasse) {
+
+
+
+    // Testo più grande e grassetto
+
+    cella.style.fontWeight = "bold";
+
+    cella.style.fontSize = "14px";
+
+
+
+    const colori = {
+
+        "M_biennio": "#FF8C00",     
+
+        "M_triennio": "#E10600",
+
+
+
+        "F_biennio": "#00A8FF",     
+
+        "F_triennio": "#0033CC",
+
+
+
+        "MF_biennio": "#4CAF50",    
+
+        "MF_triennio": "#2E7D32",
+
+
+
+        "MPM_biennio": "#FF8C00",     
+
+        "MPM_triennio": "#E10600",
+
+
+
+        "FPF_biennio": "#00A8FF",     
+
+        "FPF_triennio": "#0033CC",
+
+
+
+        "MFPMPF_biennio": "#4CAF50",    
+
+        "MFPMPF_triennio": "#2E7D32",
+
+
+
+        "MT_biennio": "#FF8C00",
+
+        "FT_biennio": "#00A8FF"
+
+    };
+
+
+
+    let chiave = materia;
+
+
+
+    if (annoClasse <= 2) {
+
+        chiave += "_biennio";
+
+    } else {
+
+        chiave += "_triennio";
+
+    }
+
+
+
+    cella.style.color = colori[chiave] || "black";
+
+}
+
+
+
+
+
+function costruisciTabella(){
+
+    const body=document.getElementById("tableBody");
+
+    body.innerHTML="";
+
+    anni.forEach(anno=>{
+
+        let row=document.createElement("tr");
+
+        row.innerHTML=`
+
+<td class="year-col">${anno}</td>
+
+<td class="small-col"></td>
+
+<td class="small-col"></td>
+
+<td></td><td></td><td></td>
+
+<td></td><td></td><td></td>
+
+`;
+
+        body.appendChild(row);
+
+    });
+
+}
+
+function aggiornaRigaSezioni(docente){
+
+    const rigaSezioni = document.getElementById("rigaSezioni");
+    const rigaOre = document.getElementById("rigaOre");
+
+    rigaSezioni.innerHTML = "";
+    rigaOre.innerHTML = "";
+
+    const sezioniOrdinate = ordinaSezioniPerOre(docente);
+    const massimi = calcolaMassimiPerSezione();
+
+    sezioniOrdinate.forEach(sez => {
+
+        let oreTotali = 0;
+
+        dati.forEach(d => {
+            if(d[1] === docente && d[4] === sez){
+                const ore = calcolaOre(d[2], parseInt(d[3]), sez);
+                oreTotali += ore.totale;
+            }
+        });
+
+        // --- CELLA SEZIONE
+        const tdSez = document.createElement("td");
+        tdSez.textContent = sez;
+
+        // --- CELLA ORE
+        const tdOre = document.createElement("td");
+        tdOre.textContent = oreTotali > 0 ? oreTotali : "";
+        tdOre.classList.add("valore-docente");
+
+        // ✔ Se il docente fa almeno 1 ora → grassetto + grande
+        if(oreTotali > 0){
+            tdSez.style.fontWeight = "bold";
+            tdSez.style.fontSize = "14px";
+        }
+
+        // 🎀 Se è il massimo della sezione
+        if(massimi[sez].docente === docente && oreTotali > 0){
+
+            tdSez.style.backgroundColor = "#ffb6c1";
+            tdSez.style.fontWeight = "bold";
+
+            tdOre.style.backgroundColor = "#ffb6c1";
+            tdOre.style.fontWeight = "bold";
+        }
+
+        rigaSezioni.appendChild(tdSez);
+        rigaOre.appendChild(tdOre);
+    });
+}
+
+
+function vaiAdAnnoFinale(){
+
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    rows.forEach(r=>{
+
+        if(r.cells[0].textContent === "2025/26"){
+
+            r.scrollIntoView({block:"start"});
+
+        }
+
+    });
+
+}
+
+
+
+function impostaAltezzaRighe(){
+
+    const container = document.querySelector(".scroll-part");
+
+    const altezza = container.clientHeight;
+
+    const altezzaRiga = altezza / 12;
+
+
+
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    rows.forEach(r=>{
+
+        r.style.height = altezzaRiga + "px";
+
+    });
+
+}
+
+
+
+function caricaDocenti(){
+
+    const select=document.getElementById("docenteSelect");
+
+    select.innerHTML="";
+
+    let nomi=[...new Set(dati.map(d=>d[1]))];
+
+    nomi.sort();
+
+    nomi.forEach(nome=>{
+
+        let opt=document.createElement("option");
+
+        opt.value=nome;
+
+        opt.textContent=nome;
+
+        select.appendChild(opt);
+
+    });
+
+}
+
+
+
+function convertiAnno(codice){
+
+    let inizio="20"+codice.substring(0,2);
+
+    let fine=codice.substring(2);
+
+    return inizio+"/"+fine;
+
+}
+
+
+
+function calcolaOre(materia, annoClasse, sezione){
+
+    const biennio = (annoClasse == 1 || annoClasse == 2);
+
+    const triennio = (annoClasse >= 3);
+
+    const sezioni5oreSeconda = ["A","B","C","D","I","M"];
+
+    let mate = 0;
+
+    let fisica = 0;
+
+
+
+    switch(materia){
+
+        case "M":
+
+            if(annoClasse == 1) mate = 5;
+
+            else if(annoClasse == 2) mate = sezioni5oreSeconda.includes(sezione) ? 5 : 4;
+
+            else mate = 4;
+
+        break;
+
+        case "F":
+
+            fisica = biennio ? 2 : 3;
+
+        break;
+
+        case "MF":
+
+            if(annoClasse == 1){ mate=5; fisica=2;}
+
+            else if(annoClasse == 2){ mate=sezioni5oreSeconda.includes(sezione)?5:4; fisica=2;}
+
+            else{ mate=4; fisica=3;}
+
+        break;
+
+        case "MPM": mate = biennio ? 6 : 5; break;
+
+        case "FPF": fisica = biennio ? 3 : 4; break;
+
+        case "MFPMPF": mate=5; fisica=4; break;
+
+        case "MT": mate=7; break;
+
+        case "FT": mate=2; fisica=2; break;
+
+    }
+
+
+
+    return {totale: mate+fisica, mate: mate, fisica: fisica};
+
+}
+
+function aggiornaDocentiPiuCondivisiSicuro(docente) {
+    const rows = document.querySelectorAll("#tableBody tr");
+    const classiIndici = [3,4,5,6,7,8];
+
+    function contaNomiInverse(materieFiltro) {
+        let counter = {};
+        let ultimoAnnoPerDocente = {};
+
+        rows.forEach(r => {
+            const anno = r.cells[0].textContent;
+
+            classiIndici.forEach(i => {
+                const cella = r.cells[i];
+                if (!cella || !cella.innerHTML.includes("<br>")) return;
+
+                const primaRiga = cella.innerHTML.split("<br>")[0]; // es: "3F=7"
+                const annoClasse = parseInt(primaRiga[0]);
+
+                // Determino materia del docente basandomi sul testo colorato della cella
+                let materiaDocente;
+                const colore = cella.style.color || "";
+                if (colore === "rgb(225, 6, 0)" || colore === "#E10600" || colore === "rgb(255, 140, 0)" || colore === "#FF8C00") {
+                    materiaDocente = "M";
+                } else if (colore === "rgb(0, 168, 255)" || colore === "#00A8FF" || colore === "rgb(0, 51, 204)" || colore === "#0033CC") {
+                    materiaDocente = "F";
+                } else {
+                    materiaDocente = ""; // se non riconosciamo colore ignoriamo
+                }
+
+                if (!materieFiltro.includes(materiaDocente)) return;
+
+                // Prendo tutti i nomi sotto la classe condivisa
+                const nomi = cella.innerHTML.split("<br>").slice(1).map(n => n.replace(/<[^>]*>/g,"").trim());
+                nomi.forEach(nome => {
+                    if (!nome) return;
+                    counter[nome] = (counter[nome] || 0) + 1;
+                    ultimoAnnoPerDocente[nome] = annoClasse;
+                });
+            });
+        });
+
+        let maxVal = 0;
+        let maxDocenti = [];
+        Object.keys(counter).forEach(n => {
+            if (counter[n] > maxVal) {
+                maxVal = counter[n];
+                maxDocenti = [n];
+            } else if (counter[n] === maxVal) {
+                maxDocenti.push(n);
+            }
+        });
+
+        if (maxVal === 0) return "";
+
+        if (maxDocenti.length > 1) {
+            maxDocenti.sort((a,b) => ultimoAnnoPerDocente[b] - ultimoAnnoPerDocente[a]);
+        }
+
+        return `${maxDocenti[0]} (${maxVal})`;
+    }
+
+    // Docente di matematica → classi dove insegna fisica
+    const materieFisica = ["F"];
+    document.getElementById("docenteMatematica").textContent = contaNomiInverse(materieFisica);
+
+    // Docente di fisica → classi dove insegna matematica
+    const materieMatematica = ["M"];
+    document.getElementById("docenteFisica").textContent = contaNomiInverse(materieMatematica);
+}
+
+function calcolaOrePerAnno(docente){
+
+    const rows = document.querySelectorAll("#tableBody tr");
+
+
+
+    const partTime = [
+
+        ["Cavallo G.","1516","14"],["Cavallo G.","1617","14"],["Cavallo G.","1819","14"],
+
+        ["Cavallo G.","2021","14"],["Cavallo G.","2122","14"],["Cavallo G.","2324","14"],
+
+        ["Cavallo G.","2526","14"],["Cavallo G.","1718","15"],["Cavallo G.","1920","15"],
+
+        ["Cavallo G.","2223","15"],["Cavallo G.","2425","15"],["Ferri G.","2324","11"],
+
+        ["Ferri G.","2425","11"],["Ferri G.","2526","11"],["Sechi R.","1516","16"],
+
+        ["Ursino M.G.","2122","10"],["Luciano","1920","6"],["Mannoni","1617","14"],
+
+        ["Mannoni","1718","4"],["Colombino D.","2526","7"]
+
+    ];
+
+
+
+    let totaleOreDisp = 0; // somma di tutte le ore a disposizione
+
+    let totaleBiennio = 0;
+
+    let totaleTriennio = 0;
+
+
+
+    rows.forEach(r=>{
+
+        const anno = r.cells[0].textContent;
+
+
+
+        // Controllo se il docente ha almeno 1 classe in quell'anno
+
+        const haClasse = dati.some(d => d[1] === docente && convertiAnno(d[0]) === anno);
+
+
+
+        if(!haClasse){
+
+            r.cells[1].textContent = "";
+
+            r.cells[2].textContent = "";
+
+            return;
+
+        }
+
+
+
+        let oreAnno = 0;
+
+        let oreBiennioAnno = 0;
+
+        let oreTriennioAnno = 0;
+
+
+
+        dati.forEach(d => {
+
+    if (d[1] === docente && convertiAnno(d[0]) === anno) {
+
+
+
+        let ore = calcolaOre(d[2], parseInt(d[3]), d[4]);
+
+        oreAnno += ore.totale;
+
+
+
+        if (parseInt(d[3]) <= 2)
+
+            oreBiennioAnno += ore.totale;
+
+        else
+
+            oreTriennioAnno += ore.totale;
+
+    }
+
+});
+
+
+
+        const isPartTime = partTime.some(p => p[0] === docente && convertiAnno(p[1]) === anno);
+
+
+
+        let oreTotali = oreAnno;
+
+        let oreDisp = 0;
+
+        if(!isPartTime && oreAnno < 18){
+
+            oreDisp = 18 - oreAnno;
+
+            totaleOreDisp += oreDisp; // aggiungo alla somma totale
+
+        }
+
+
+
+        totaleBiennio += oreBiennioAnno;
+
+        totaleTriennio += oreTriennioAnno;
+
+
+
+        r.cells[1].textContent = oreTotali;
+
+        r.cells[2].textContent = oreDisp;
+
+    });
+
+
+
+    // Aggiorna celle generali
+
+    document.getElementById("oreDisp").textContent = totaleOreDisp;
+
+    document.getElementById("oreBiennio").textContent = totaleBiennio;
+
+    document.getElementById("oreTriennio").textContent = totaleTriennio;
+
+    document.getElementById("numeroOre").textContent = totaleBiennio + totaleTriennio + totaleOreDisp;
+
+}
+
+function aggiungiDocentiCondivisi(docente) {
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    rows.forEach(r => {
+        const anno = r.cells[0].textContent;
+
+        for (let i = 3; i <= 8; i++) { // celle classi
+            let cella = r.cells[i];
+            if (!cella.textContent) continue;
+
+            let match = cella.textContent.match(/^(\d)([A-P])=(\d+)/);
+            if (!match) continue;
+
+            let annoClasse = parseInt(match[1]);
+            let sezione = match[2];
+            let numeroOre = match[3];
+
+            let altriDocenti = dati.filter(d => {
+                return d[0] === convertiAnnoCodice(anno) &&
+                       d[3] == annoClasse &&
+                       d[4] == sezione &&
+                       d[1] !== docente;
+            }).map(d => d[1]);
+
+            if (altriDocenti.length > 0) {
+                let primaRiga = `${annoClasse}${sezione}=${numeroOre}`;
+
+                const coloreClasse = cella.style.color;
+                let coloreNome = "black";
+
+                if ((coloreClasse === "#E10600" || coloreClasse === "rgb(225, 6, 0)") && annoClasse >= 3) {
+                    coloreNome = "#0033CC";
+                } else if ((coloreClasse === "#0033CC" || coloreClasse === "rgb(0, 51, 204)") && annoClasse >= 3) {
+                    coloreNome = "#E10600";
+                } else if ((coloreClasse === "#00A8FF" || coloreClasse === "rgb(0, 168, 255)") && annoClasse <= 2) {
+                    coloreNome = "#FF8C00";
+                } else if ((coloreClasse === "#FF8C00" || coloreClasse === "rgb(255, 140, 0)") && annoClasse <= 2) {
+                    coloreNome = "#00A8FF";
+                }
+
+                // Nomi leggermente più grandi e più marcati
+                let nomiHtml = altriDocenti.map(n => `<span style="color:${coloreNome}; font-weight:600; font-size:13px;">${n}</span>`).join("<br>");
+                cella.innerHTML = primaRiga + "<br>" + nomiHtml;
+
+                r.style.height = "auto";
+                cella.style.lineHeight = "1.2em";
+            }
+        }
+    });
+}
+// Funzione helper per convertire anni in codici
+function convertiAnnoCodice(annoTesto) {
+    // Es: "2015/16" → "1516"
+    let parts = annoTesto.split("/");
+    return parts[0].slice(-2) + parts[1].slice(-2);
+}
+function calcolaMassimiPerSezione(){
+
+    const tutteSezioni = ["A","B","C","D","E","F","G","H","I","L","M","N","O","P"];
+    let risultato = {};
+
+    tutteSezioni.forEach(sez => {
+
+        let oreDocenti = {};
+
+        dati.forEach(d => {
+
+            const docente = d[1];
+            const materia = d[2];
+            const annoClasse = parseInt(d[3]);
+            const sezione = d[4];
+
+            if(sezione === sez){
+
+                if(!oreDocenti[docente]){
+                    oreDocenti[docente] = 0;
+                }
+
+                const ore = calcolaOre(materia, annoClasse, sezione);
+                oreDocenti[docente] += ore.totale;
+            }
+        });
+
+        // Trovo il massimo
+        let maxOre = 0;
+        let docenteMax = null;
+
+        Object.keys(oreDocenti).forEach(doc => {
+            if(oreDocenti[doc] > maxOre){
+                maxOre = oreDocenti[doc];
+                docenteMax = doc;
+            }
+        });
+
+        risultato[sez] = {
+            docente: docenteMax,
+            ore: maxOre
+        };
+    });
+
+    return risultato;
+}
+
+
+function evidenziaContinuita() {
+
+    const rows = document.querySelectorAll("#tableBody tr");
+    const classiContinuita = [];
+
+    for (let col = 3; col <= 8; col++) {
+
+        for (let r = 0; r < rows.length - 4; r++) {
+
+            let celle = [];
+            let valida = true;
+            let sezione = null;
+
+            for (let k = 0; k < 5; k++) {
+
+                let cella = rows[r + k].cells[col];
+                if (!cella) { valida = false; break; }
+
+                let primaRiga = cella.innerHTML.split("<br>")[0].trim();
+                let match = primaRiga.match(/^(\d)([A-Z])/);
+
+                if (!match) { valida = false; break; }
+
+                let numero = parseInt(match[1]);
+                let sez = match[2];
+
+                if (k === 0) {
+                    if (numero !== 1) valida = false;
+                    sezione = sez;
+                } else {
+                    if (numero !== k + 1 || sez !== sezione) {
+                        valida = false;
+                        break;
+                    }
+                }
+
+                celle.push(cella);
+            }
+
+            if (valida) {
+
+                celle.forEach((c, i) => {
+                    c.style.backgroundColor = "#ffd6d6";
+                    c.style.borderLeft = "1px solid #cc0000";
+                    c.style.borderRight = "1px solid #cc0000";
+                    if (i === 0) c.style.borderTop = "1px solid #cc0000";
+                    if (i === 4) c.style.borderBottom = "1px solid #cc0000";
+                });
+
+                let annoInizio = rows[r].cells[0].textContent;
+                let annoStart = parseInt(annoInizio.split("/")[0]);
+                let annoEnd = annoStart + 5;
+
+                classiContinuita.push(`(${annoStart}-${annoEnd})${sezione}`);
+            }
+        }
+    }
+
+    const cella = document.getElementById("elencoClassi");
+
+    let testo = "";
+
+    classiContinuita.forEach((c, i) => {
+        testo += c;
+
+        if (i < classiContinuita.length - 1) testo += ", ";
+
+        if ((i + 1) % 2 === 0) testo += "<br>";
+    });
+
+    cella.innerHTML = testo;
+
+    // Mantieni dimensione ma rimuovi il grassetto
+   cella.style.fontSize = "14px";
+cella.style.fontWeight = "bold"; // <-- qui rimane normale
+    cella.style.lineHeight = "1.4em";   // <-- leggero spazio tra le righe
+}
+
+function ordinaSezioniPerOre(docente) {
+
+    // tutte le sezioni possibili (come nella prima riga)
+    const tutteSezioni = ["A","B","C","D","E","F","G","H","I","L","M","N","O","P"];
+
+    // inizializzo conteggio ore per sezione
+    let orePerSezione = {};
+    tutteSezioni.forEach(s => orePerSezione[s] = 0);
+
+    // sommo le ore del docente per ogni sezione
+    dati.forEach(d => {
+        if (d[1] === docente) {
+            const sezione = d[4];
+            const materia = d[2];
+            const annoClasse = parseInt(d[3]);
+
+            const ore = calcolaOre(materia, annoClasse, sezione);
+            orePerSezione[sezione] += ore.totale;
+        }
+    });
+
+    // separo sezioni con ore e senza ore
+    let conOre = [];
+    let senzaOre = [];
+
+    tutteSezioni.forEach(s => {
+        if (orePerSezione[s] > 0) {
+            conOre.push(s);
+        } else {
+            senzaOre.push(s);
+        }
+    });
+
+    // ordino quelle con ore in ordine decrescente
+    conOre.sort((a,b) => orePerSezione[b] - orePerSezione[a]);
+
+    // quelle senza ore restano alfabetiche
+    senzaOre.sort();
+
+    return [...conOre, ...senzaOre];
+}
+function mostraDocentePopup(testo) {
+    // Crea overlay semi-trasparente
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    overlay.style.display = 'flex';
+    overlay.style.alignItems = 'center';
+    overlay.style.justifyContent = 'center';
+    overlay.style.zIndex = 1000;
+
+    // Crea il contenitore del popup
+    const popup = document.createElement('div');
+    popup.innerHTML = testo; // HTML funziona qui!
+    popup.style.backgroundColor = '#fff';
+    popup.style.padding = '20px';
+    popup.style.borderRadius = '8px';
+    popup.style.boxShadow = '0 0 10px rgba(0,0,0,0.5)';
+    popup.style.maxWidth = '400px';
+    popup.style.textAlign = 'center';
+    popup.style.fontSize = '16px';
+    popup.style.lineHeight = '1.5';
+    popup.style.cursor = 'default';
+
+    overlay.appendChild(popup);
+    document.body.appendChild(overlay);
+
+    // Chiudi cliccando sull'overlay (ma non sul popup)
+    overlay.addEventListener('click', () => overlay.remove());
+    popup.addEventListener('click', e => e.stopPropagation());
+}function aggiungiPopup(docente) {
+    // --- RIGA 1 e 2: Sezioni e Ore
+    const tdSezioni = document.querySelectorAll("#rigaSezioni td");
+    const tdOre = document.querySelectorAll("#rigaOre td");
+
+    tdSezioni.forEach((td, i) => {
+        const newTd = td.cloneNode(true);
+        td.parentNode.replaceChild(newTd, td);
+
+        newTd.addEventListener("click", () => {
+            const ore = parseInt(tdOre[i].textContent) || 0;
+            const rosa = newTd.style.backgroundColor === "rgb(255, 182, 193)";
+            if (ore === 0) {
+                mostraDocentePopup(`Il docente <b>${docente}</b> non ha insegnato in nessuna classe della sezione <b>${newTd.textContent}</b>`);
+            } else if (rosa) {
+                mostraDocentePopup(`Il docente <b>${docente}</b> è il docente che ha svolto più ore di tutti nella sezione <b>${newTd.textContent}</b> con un totale di <b>${ore}</b> ore`);
+            } else {
+                mostraDocentePopup(`Il docente <b>${docente}</b> ha svolto <b>${ore}</b> ore nella sezione <b>${newTd.textContent}</b>`);
+            }
+        });
+    });
+
+    tdOre.forEach((td, i) => {
+        const newTd = td.cloneNode(true);
+        td.parentNode.replaceChild(newTd, td);
+
+        newTd.addEventListener("click", () => tdSezioni[i].click());
+    });
+
+    // --- RIGA 3: Anno nascita
+    const annoNascita = document.getElementById("annoNascita");
+    const newAnnoNascita = annoNascita.cloneNode(true);
+    annoNascita.parentNode.replaceChild(newAnnoNascita, annoNascita);
+
+    newAnnoNascita.addEventListener("click", () => {
+        if (newAnnoNascita.textContent && newAnnoNascita.textContent !== "-") {
+            mostraDocentePopup(`Il docente <b>${docente}</b> è nato nel <b>${newAnnoNascita.textContent}</b>`);
+        } else {
+            mostraDocentePopup(`L'anno di nascita del docente <b>${docente}</b> non è ancora stato registrato`);
+        }
+    });
+
+    // --- Anno pensione
+    const annoPensione = document.getElementById("annoPensione");
+    const newAnnoPensione = annoPensione.cloneNode(true);
+    annoPensione.parentNode.replaceChild(newAnnoPensione, annoPensione);
+
+    newAnnoPensione.addEventListener("click", () => {
+        if (!newAnnoPensione.textContent || newAnnoPensione.textContent === "-") {
+            mostraDocentePopup(`L'anno di pensione del docente <b>${docente}</b> non è ancora stato registrato`);
+        } else {
+            const anno = parseInt(newAnnoPensione.textContent.split("/")[0]);
+            if (anno > 2025) {
+                mostraDocentePopup(`Si stima che il docente <b>${docente}</b> andrà in pensione nel <b>${newAnnoPensione.textContent}</b>`);
+            } else {
+                mostraDocentePopup(`Il docente <b>${docente}</b> è andato in pensione nel <b>${newAnnoPensione.textContent}</b>`);
+            }
+        }
+    });
+
+    // --- Classi con continuità
+    const classiContinuita = document.getElementById("elencoClassi");
+    const newClassiContinuita = classiContinuita.cloneNode(true);
+    classiContinuita.parentNode.replaceChild(newClassiContinuita, classiContinuita);
+
+    newClassiContinuita.addEventListener("click", () => {
+        if (!newClassiContinuita.textContent.trim()) {
+            mostraDocentePopup(`Il docente <b>${docente}</b> non ha portato nessuna classe dalla 1 alla 5`);
+        } else {
+            mostraDocentePopup(`Il docente <b>${docente}</b> ha portato dalla 1 alla 5 le seguenti classi: <b>${newClassiContinuita.textContent}</b>`);
+        }
+    });
+
+   // --- Docente matematica con più classi condivise
+const docenteMatematica = document.getElementById("docenteMatematica");
+const newDocenteMatematica = docenteMatematica.cloneNode(true);
+docenteMatematica.parentNode.replaceChild(newDocenteMatematica, docenteMatematica);
+
+newDocenteMatematica.addEventListener("click", () => {
+    const text = newDocenteMatematica.textContent.trim();
+    if (!text) {
+        mostraDocentePopup(`Il docente <b>${docente}</b> non ha mai insegnato solo fisica in una classe`);
+    } else {
+        // Estrae nome e numero tra parentesi
+        const match = text.match(/(.+)\s*\((\d+)\)/);
+        if (match) {
+            const y = match[1].trim(); // nome docente condiviso
+            const z = match[2];        // numero di volte
+            mostraDocentePopup(`Il docente <b>${y}</b> è il docente con cui <b>${docente}</b> ha condiviso più classi di fisica, per un totale di <b>${z}</b> volte`);
+        } else {
+            // fallback se non ci sono parentesi
+            mostraDocentePopup(`Il docente <b>${y}</b> è il docente con cui <b>${docente}</b> ha condiviso più classi di matematica`);
+        }
+    }
+});
+
+    // --- RIGA 4: Ore matematica e fisica
+    const oreMate = document.getElementById("oreMate");
+    const newOreMate = oreMate.cloneNode(true);
+    oreMate.parentNode.replaceChild(newOreMate, oreMate);
+
+    newOreMate.addEventListener("click", () => {
+        const ore = parseInt(newOreMate.textContent) || 0;
+        if (ore === 0) mostraDocentePopup(`Il docente <b>${docente}</b> non ha mai insegnato matematica al liceo spano`);
+        else mostraDocentePopup(`Il docente <b>${docente}</b> ha insegnato per <b>${ore}</b> ore settimanali la matematica`);
+    });
+
+    const oreFisica = document.getElementById("oreFisica");
+    const newOreFisica = oreFisica.cloneNode(true);
+    oreFisica.parentNode.replaceChild(newOreFisica, oreFisica);
+
+    newOreFisica.addEventListener("click", () => {
+        const ore = parseInt(newOreFisica.textContent) || 0;
+        if (ore === 0) mostraDocentePopup(`Il docente <b>${docente}</b> non ha mai insegnato fisica al liceo spano`);
+        else mostraDocentePopup(`Il docente <b>${docente}</b> ha insegnato per <b>${ore}</b> ore settimanali la fisica`);
+    });
+
+// --- Numero programmi (mini-table)
+const righeMini = document.querySelectorAll(".mini-table tr");
+righeMini.forEach((riga, rowIndex) => {
+    const newRiga = riga.cloneNode(true);
+    riga.parentNode.replaceChild(newRiga, riga);
+
+    newRiga.querySelectorAll("td").forEach((td, i) => {
+        td.addEventListener("click", () => {
+            let rawText = td.textContent.trim().replace(/\s+/g, ""); // rimuove spazi extra
+            const ordine = ["prima","seconda","terza","quarta","quinta"][i];
+
+            let mainCount = 0;
+            let potenziamento = 0;
+            let tipoPot = "";
+
+            const regex = /^(\d+)(?:\+(\d+)(PM|PF))?$/i; // ora ignora maiuscole/minuscole
+            const match = rawText.match(regex);
+
+            if (match) {
+                mainCount = parseInt(match[1]);
+                if (match[2] && match[3]) {
+                    potenziamento = parseInt(match[2]);
+                    tipoPot = match[3].toUpperCase() === "PM" ? "matematico" : "fisico";
+                }
+            }
+
+            const materia = rowIndex === 0 ? "matematica" : "fisica";
+
+            if (mainCount === 0 && potenziamento === 0) {
+                mostraDocentePopup(`Il docente <b>${docente}</b> non ha mai insegnato il programma di ${materia} della classe <b>${ordine}</b>`);
+            } else if (potenziamento > 0) {
+                mostraDocentePopup(`Il docente <b>${docente}</b> ha insegnato <b>${mainCount}</b> volte il programma di ${materia} della classe <b>${ordine}</b>, più <b>${potenziamento}</b> ore di potenziamento ${tipoPot}`);
+            } else {
+                mostraDocentePopup(`Il docente <b>${docente}</b> ha insegnato <b>${mainCount}</b> volte il programma di ${materia} della classe <b>${ordine}</b>`);
+            }
+        });
+    });
+});
+    // --- Docente fisica con più classi condivise
+const docenteFisica = document.getElementById("docenteFisica");
+const newDocenteFisica = docenteFisica.cloneNode(true);
+docenteFisica.parentNode.replaceChild(newDocenteFisica, docenteFisica);
+
+newDocenteFisica.addEventListener("click", () => {
+    const text = newDocenteFisica.textContent.trim();
+    if (!text) {
+        mostraDocentePopup(`Il docente <b>${docente}</b> non ha mai insegnato solo matematica in una classe`);
+    } else {
+        const match = text.match(/(.+)\s*\((\d+)\)/);
+        if (match) {
+            const y = match[1].trim();
+            const z = match[2];
+            mostraDocentePopup(`Il docente <b>${y}</b> è il docente con cui <b>${docente}</b> ha condiviso più classi di matematica, per un totale di <b>${z}</b> volte`);
+        } else {
+            mostraDocentePopup(`Il docente <b>${y}</b> è il docente con cui <b>${docente}</b> ha condiviso più classi di fisica`);
+        }
+    }
+});
+
+    // --- RIGA 5: anni, ore, classi ecc.
+    const celleRiga5 = ["anniLiceo","numeroOre","oreBiennio","oreTriennio","oreDisp","numeroClassi","numeroClassiQuinte"];
+    celleRiga5.forEach(id => {
+        const td = document.getElementById(id);
+        const newTd = td.cloneNode(true);
+        td.parentNode.replaceChild(newTd, td);
+
+        newTd.addEventListener("click", () => {
+            const valore = parseInt(newTd.textContent) || 0;
+            switch(id) {
+                case "anniLiceo":
+                    mostraDocentePopup(`Il docente <b>${docente}</b> ha insegnato per <b>${valore}</b> anni al liceo spano`);
+                    break;
+                case "numeroOre":
+                    mostraDocentePopup(`Il docente <b>${docente}</b> ha insegnato per un totale di <b>${valore}</b> ore al liceo spano`);
+                    break;
+                case "oreBiennio":
+                    mostraDocentePopup(`Il docente <b>${docente}</b> ha insegnato <b>${valore}</b> ore nel biennio`);
+                    break;
+                case "oreTriennio":
+                    if (valore === 0) mostraDocentePopup(`Il docente <b>${docente}</b> non ha mai insegnato al triennio al liceo spano`);
+                    else mostraDocentePopup(`Il docente <b>${docente}</b> ha insegnato <b>${valore}</b> ore nel triennio`);
+                    break;
+                case "oreDisp":
+                    mostraDocentePopup(`Il docente <b>${docente}</b> ha integrato le ore di insegnamento con <b>${valore}</b> ore a disposizione/potenziamento`);
+                    break;
+                case "numeroClassi":
+                    mostraDocentePopup(`Il docente <b>${docente}</b> ha insegnato in <b>${valore}</b> classi diverse`);
+                    break;
+                case "numeroClassiQuinte":
+                    if (valore === 0) mostraDocentePopup(`Il docente <b>${docente}</b> non ha mai insegnato in una classe 5 del liceo spano`);
+                    else mostraDocentePopup(`Il docente <b>${docente}</b> ha insegnato in <b>${valore}</b> classi 5`);
+                    break;
+            }
+        });
+    });
+}
+
+function aggiungiPopupTabella(docente){
+
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    rows.forEach(r => {
+
+        const cellOre = r.cells[1]; // colonna 2
+        const cellDisp = r.cells[2]; // colonna 3
+        const anno = r.cells[0].textContent;
+
+        if(!cellOre || !cellDisp) return;
+
+        const newOre = cellOre.cloneNode(true);
+        const newDisp = cellDisp.cloneNode(true);
+
+        cellOre.parentNode.replaceChild(newOre, cellOre);
+        cellDisp.parentNode.replaceChild(newDisp, cellDisp);
+
+        function mostraPopup(){
+
+            const z = parseInt(newOre.textContent);
+            const w = parseInt(newDisp.textContent) || 0;
+
+            if(!z) return; // funziona solo se compilata
+
+            if(w === 0){
+
+                mostraDocentePopup(
+                    `Nell'anno scolastico <b>${anno}</b>, il docente <b>${docente}</b> ha insegnato per <b>${z}</b> ore settimanali`
+                );
+
+            }else{
+
+                mostraDocentePopup(
+                    `Nell'anno scolastico <b>${anno}</b>, il docente <b>${docente}</b> ha insegnato per <b>${z}</b> ore settimanali e ha integrato le sue ore con <b>${w}</b> ore a disposizione`
+                );
+
+            }
+        }
+
+        newOre.addEventListener("click", mostraPopup);
+        newDisp.addEventListener("click", mostraPopup);
+
+    });
+
+}
+
+function aggiungiPopupTabella2(docente){
+
+const rows = document.querySelectorAll("#tableBody tr");
+
+rows.forEach(r=>{
+
+for(let i=3;i<=8;i++){
+
+let cella=r.cells[i];
+if(!cella || !cella.textContent) continue;
+
+let newCella=cella.cloneNode(true);
+cella.parentNode.replaceChild(newCella,cella);
+
+newCella.addEventListener("click",()=>{
+
+let primaRiga=newCella.innerHTML.split("<br>")[0].trim();
+
+let match=primaRiga.match(/^(\d)([A-Z])=(\d+)/);
+if(!match) return;
+
+let annoClasse=parseInt(match[1]);
+let sezione=match[2];
+
+let anno=r.cells[0].textContent;
+let annoCodice=convertiAnnoCodice(anno);
+
+let righeClasse=dati.filter(d=>
+d[0]===annoCodice &&
+parseInt(d[3])===annoClasse &&
+d[4]===sezione
+);
+
+if(righeClasse.length===0) return;
+
+let testo=`Nell'anno scolastico <b>${anno}</b> nella classe <b>${annoClasse}${sezione}</b>:<br><br>`;
+
+let altriDocenti=[];
+
+righeClasse.forEach(d=>{
+
+let prof=d[1];
+let materia=d[2];
+
+let ore=calcolaOre(materia,annoClasse,sezione);
+
+let parti=[];
+
+if(ore.mate>0){
+parti.push(`matematica per <b>${ore.mate}</b> ore`);
+}
+
+if(ore.fisica>0){
+parti.push(`fisica per <b>${ore.fisica}</b> ore`);
+}
+
+let somma=ore.mate+ore.fisica;
+
+if(prof===docente){
+
+if(parti.length>1){
+
+testo+=`• Il docente <b>${prof}</b> insegnava ${parti.join(" e ")} per un totale di <b>${somma}</b> ore settimanali.<br>`;
+
+}else{
+
+testo+=`• Il docente <b>${prof}</b> insegnava ${parti[0]} settimanali.<br>`;
+
+}
+
+}else{
+
+altriDocenti.push(prof);
+
+}
+
+});
+
+mostraDocentePopup(testo);
+
+});
+
+}
+
+});
+
+}
+
+function calcolaNumeroClassi(docente) {
+    const rows = document.querySelectorAll("#tableBody tr");
+    const numColonne = 6; // colonne classi 3-8
+    let totaleClassi = 0;
+
+    for (let col = 3; col <= 8; col++) {
+        let colClasse = [];
+        let ultimaClasse = null;
+        let ultimoAnnoClasse = 0;
+
+        rows.forEach(r => {
+            const cella = r.cells[col];
+            if (!cella || !cella.textContent) return;
+
+            let primaRiga = cella.textContent.split("<br>")[0].trim();
+            let match = primaRiga.match(/^(\d)([A-Z])/);
+
+            if (!match) return;
+
+            let annoClasse = parseInt(match[1]);
+            let sezione = match[2];
+
+            // nuova classe se:
+            // - non c'è ancora una classe tracciata
+            // - oppure l'anno non è consecutivo della stessa sezione
+            if (!ultimaClasse || annoClasse !== ultimoAnnoClasse + 1 || sezione !== ultimaClasse) {
+                colClasse.push(sezione + "-" + annoClasse); // identificatore temporaneo
+                ultimaClasse = sezione;
+            }
+
+            ultimoAnnoClasse = annoClasse;
+        });
+
+        totaleClassi += colClasse.length;
+    }
+
+    document.getElementById("numeroClassi").textContent = totaleClassi;
+}
+
+function caricaDocente(tipo) {
+    // --- Determina da quale select prendere il docente
+    let select;
+    if(tipo === 'attuali') select = document.getElementById("docenteAttuali");
+    else if(tipo === 'storici') select = document.getElementById("docenteStorici");
+    else if(tipo === 'ex') select = document.getElementById("docenteEx");
+    else select = document.getElementById("docenteAttuali"); // default
+
+    const docente = select.value;
+
+    // --- Aggiorna righe sezioni
+    aggiornaRigaSezioni(docente);
+
+    // --- Inizializza conteggio programmi per anno
+    let programmi = { m: {}, f: {} };
+    for (let i = 1; i <= 5; i++) {
+        programmi.m[i] = { norm: 0, PM: 0, T: 0 };
+        programmi.f[i] = { norm: 0, PF: 0 };
+    }
+
+    // --- Costruisci tabella scrollabile
+    costruisciTabella();
+    impostaAltezzaRighe();
+    vaiAdAnnoFinale();
+
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    // --- Variabili per accumuli
+    let totaleMate = 0;
+    let totaleFisica = 0;
+    let totaleBiennio = 0;
+    let totaleTriennio = 0;
+    let orePerSezione = {};
+
+    let classiContinuita = {};
+    let classiUniche = new Set();
+    let classiPerAnno = {};
+
+    // --- Ciclo sui dati per il docente selezionato
+    dati.sort((a, b) => a[0] - b[0]).forEach(d => {
+        if (d[1] === docente) {
+            let annoClasse = parseInt(d[3]);
+            let sezione = d[4];
+            let materia = d[2];
+
+            // Aggiornamento dei programmi per materia/anno
+            switch (materia) {
+                case "M": programmi.m[annoClasse].norm++; break;
+                case "F": programmi.f[annoClasse].norm++; break;
+                case "MF": programmi.m[annoClasse].norm++; programmi.f[annoClasse].norm++; break;
+                case "MPM": programmi.m[annoClasse].norm++; programmi.m[annoClasse].PM++; break;
+                case "FPF": programmi.f[annoClasse].norm++; programmi.f[annoClasse].PF++; break;
+                case "MFPMPF": programmi.m[annoClasse].norm++; programmi.m[annoClasse].PM++; programmi.f[annoClasse].norm++; programmi.f[annoClasse].PF++; break;
+                case "MT": programmi.m[annoClasse].norm++; programmi.m[annoClasse].T++; break;
+                case "FT": programmi.m[annoClasse].norm++; programmi.m[annoClasse].T++; break;
+            }
+
+            let anno = convertiAnno(d[0]);
+            let ore = calcolaOre(materia, annoClasse, sezione);
+
+            totaleMate += ore.mate;
+            totaleFisica += ore.fisica;
+
+            if (annoClasse <= 2) totaleBiennio += ore.totale;
+            else totaleTriennio += ore.totale;
+
+            if (!orePerSezione[sezione]) orePerSezione[sezione] = 0;
+            orePerSezione[sezione] += ore.totale;
+
+            if (!classiPerAnno[anno]) classiPerAnno[anno] = [];
+            classiPerAnno[anno].push({
+                annoClasse: annoClasse,
+                sezione: sezione,
+                materia: materia,
+                oreTotali: ore.totale,
+                nomeClasse: annoClasse + sezione,
+                testo: annoClasse + sezione + "=" + ore.totale
+            });
+
+            if (!classiContinuita[sezione]) {
+                classiContinuita[sezione] = annoClasse;
+                classiUniche.add(sezione + "-" + annoClasse);
+            } else {
+                let ultimaClasse = classiContinuita[sezione];
+                if (annoClasse > ultimaClasse) {
+                    classiContinuita[sezione] = annoClasse;
+                } else if (annoClasse < ultimaClasse) {
+                    classiContinuita[sezione] = annoClasse;
+                    classiUniche.add(sezione + "-" + annoClasse);
+                }
+            }
+        }
+    });
+
+    // --- Aggiorna anno nascita e pensione
+    if (datiAnni[docente]) {
+        document.getElementById("annoNascita").textContent = datiAnni[docente].nascita;
+        document.getElementById("annoPensione").textContent = datiAnni[docente].pensione || "-";
+    } else {
+        document.getElementById("annoNascita").textContent = "-";
+        document.getElementById("annoPensione").textContent = "-";
+    }
+
+    // --- Riempimento colonne della tabella
+    let slotPrecedenti = [null, null, null, null, null, null];
+    anni.forEach(anno => {
+        if (!classiPerAnno[anno]) {
+            slotPrecedenti = [null, null, null, null, null, null];
+            return;
+        }
+
+        let classiAnnoCorrente = classiPerAnno[anno];
+        let slotCorrenti = [null, null, null, null, null, null];
+        let classiNonPiazzate = [];
+
+        classiAnnoCorrente.forEach(cls => {
+            let piazzata = false;
+            if (cls.annoClasse > 1) {
+                let classePrecedenteDaCercare = (cls.annoClasse - 1) + cls.sezione;
+                let indiceTrovato = slotPrecedenti.findIndex(p => p && p.nomeClasse === classePrecedenteDaCercare);
+                if (indiceTrovato !== -1 && slotCorrenti[indiceTrovato] === null) {
+                    slotCorrenti[indiceTrovato] = cls;
+                    piazzata = true;
+                }
+            }
+            if (!piazzata) classiNonPiazzate.push(cls);
+        });
+
+        classiNonPiazzate.forEach(cls => {
+            let indiceLibero = slotCorrenti.findIndex(s => s === null);
+            if (indiceLibero !== -1) slotCorrenti[indiceLibero] = cls;
+        });
+
+        slotPrecedenti = [...slotCorrenti];
+
+        rows.forEach(r => {
+            if (r.cells[0].textContent === anno) {
+                for (let i = 0; i < 6; i++) {
+                    let cella = r.cells[i + 3];
+                    let classeAssegnata = slotCorrenti[i];
+                    if (classeAssegnata) {
+                        cella.textContent = classeAssegnata.testo;
+                        coloraClasse(cella, classeAssegnata.materia, classeAssegnata.annoClasse);
+                    } else {
+                        cella.textContent = "";
+                        cella.style.fontWeight = "normal";
+                        cella.style.fontSize = "12px";
+                        cella.style.color = "black";
+                    }
+                }
+            }
+        });
+    });
+
+    // --- Aggiorna riepilogo ore e classi
+    document.getElementById("oreMate").textContent = totaleMate;
+    document.getElementById("oreFisica").textContent = totaleFisica;
+    document.getElementById("oreBiennio").textContent = totaleBiennio;
+    document.getElementById("oreTriennio").textContent = totaleTriennio;
+
+    let anniInsegnati = new Set();
+    dati.forEach(d => { if (d[1] === docente) anniInsegnati.add(d[0]); });
+    document.getElementById("anniLiceo").textContent = anniInsegnati.size;
+
+    const celleSezioni = document.querySelectorAll(".static-part table tr:nth-child(2) td");
+    celleSezioni.forEach((cell, index) => {
+        const lettera = document.querySelectorAll(".static-part table tr:nth-child(1) td")[index].textContent;
+        cell.textContent = orePerSezione[lettera] || "";
+    });
+
+    const righeMini = document.querySelectorAll(".mini-table tr");
+    for (let i = 1; i <= 5; i++) {
+        let m = programmi.m[i];
+let f = programmi.f[i];
+
+let testoM = "";
+let testoF = "";
+
+// trasformo T in PM equivalenti
+let PMtotali = m.PM + (m.T * 2);
+
+if (m.norm > 0) testoM = m.norm.toString();
+if (PMtotali > 0) testoM += "+" + PMtotali + " PM";
+        righeMini[0].cells[i - 1].textContent = testoM;
+        if (f.norm > 0) testoF = f.norm.toString();
+        if (f.PF > 0) testoF += "+" + f.PF + " PF";
+        righeMini[1].cells[i - 1].textContent = testoF;
+    }
+
+    for (let r = 0; r < righeMini.length; r++) {
+        for (let c = 0; c < 5; c++) {
+            if (r === 0) righeMini[r].cells[c].style.backgroundColor = (c <= 1 ? "#FFC780" : "#E17070");
+            else righeMini[r].cells[c].style.backgroundColor = (c <= 1 ? "#80D4FF" : "#7099E1");
+            righeMini[r].cells[c].style.fontWeight = "bold";
+            righeMini[r].cells[c].style.color = "black";
+        }
+    }
+
+    document.getElementById("numeroClassi").textContent = classiUniche.size;
+    let numeroClassiQuinte = dati.filter(d => d[1] === docente && parseInt(d[3]) === 5).length;
+    document.getElementById("numeroClassiQuinte").textContent = numeroClassiQuinte;
+
+    // --- Calcola ore totali e classi condivise
+aggiungiDocentiCondivisi(docente);
+aggiungiPopup(select.value);
+evidenziaContinuita();
+calcolaNumeroClassi(docente);
+calcolaOrePerAnno(docente);
+aggiornaDocentiPiuCondivisiSicuro(docente);
+aggiungiPopupTabella(docente);
+aggiungiPopupTabella2(docente);
+}
+
+caricaDocentiDivisi();
+caricaDocente();
+
+
+</script>
+
+
+
+</body>
+
+</html>
+
+
